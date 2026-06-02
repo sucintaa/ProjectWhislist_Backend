@@ -43,20 +43,48 @@
 //}
 package wishlist;
 
+//import org.springframework.web.bind.annotation.GetMapping;
+//import org.springframework.web.bind.annotation.RequestParam;
+//import org.springframework.web.bind.annotation.RestController;
+//
+//@RestController
+//public class ScrapeController {
+//
+//    private final ScrapeService scrapeService;
+//
+//    public ScrapeController(ScrapeService scrapeService) {
+//        this.scrapeService = scrapeService;
+//    }
+//
+//    @GetMapping("/scrape")
+//    public ProductPreview scrape(@RequestParam String url) {
+//        return scrapeService.extractMetadata(url);
+//    }
+//}
+import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class ScrapeController {
+@RequestMapping("/wishlist")
+@CrossOrigin // allow Chrome extension to call this
+public class WishlistController {
 
-    private final ScrapeService scrapeService;
+    private final WishlistService wishlistService;
 
-    public ScrapeController(ScrapeService scrapeService) {
-        this.scrapeService = scrapeService;
+    public WishlistController(WishlistService wishlistService) {
+        this.wishlistService = wishlistService;
     }
 
-    // Phase 1: Metadata extraction (POST)
-    @PostMapping("/preview")
-    public ProductPreview preview(@RequestBody ScrapeRequest request) {
-        return scrapeService.extractMetadata(request.getUrl());
+    @PostMapping("/add")
+    public ResponseEntity<String> addItem(@RequestBody WishlistItemRequest request) {
+        wishlistService.addItem(request);
+        return ResponseEntity.ok("Item added");
+    }
+
+    @GetMapping
+    public List<WishlistItemRequest> getItems() {
+        return wishlistService.getItems();
     }
 }
+
